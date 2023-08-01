@@ -12,8 +12,8 @@ model User {
   name      String
   email     String    @unique
   password  String
-  cpf       Int
-  phone     Int
+  cpf       String    @unique
+  phone     String    @unique
   createdAt DateTime  @default(now())
 
   @@map("users")
