@@ -9,4 +9,10 @@ export class UsersRepository {
   async getUsers() {
     return await this.prisma.user.findMany();
   }
+  
+  async createUser(user: CreateUserDTO) {
+    return await this.prisma.user.create({
+      data: user
+    })
+  }
 }
