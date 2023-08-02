@@ -19,10 +19,6 @@ export class CreateUserDTO {
 }
 
 export class UpdateUserDTO {
-  @IsOptional()
-  @IsString()
-  name?: string;
-
   @IsEmail()
   @IsOptional()
   email?: string;
@@ -30,10 +26,6 @@ export class UpdateUserDTO {
   @IsOptional()
   @IsStrongPassword()
   password?: string;
-
-  @IsOptional()
-  @IsCPF()
-  cpf?: string;
 
   @IsOptional()
   @IsMobilePhone()
