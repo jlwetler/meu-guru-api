@@ -1,4 +1,4 @@
-import { IsEmail, IsMobilePhone, IsString, IsStrongPassword } from 'class-validator';
+import { IsEmail, IsMobilePhone, IsOptional, IsString, IsStrongPassword } from 'class-validator';
 import { IsCPF } from 'class-validator-cpf';
 
 export class CreateUserDTO {
@@ -16,4 +16,26 @@ export class CreateUserDTO {
 
   @IsMobilePhone()
   phone: string;
+}
+
+export class UpdateUserDTO {
+  @IsOptional()
+  @IsString()
+  name?: string;
+
+  @IsEmail()
+  @IsOptional()
+  email?: string;
+
+  @IsOptional()
+  @IsStrongPassword()
+  password?: string;
+
+  @IsOptional()
+  @IsCPF()
+  cpf?: string;
+
+  @IsOptional()
+  @IsMobilePhone()
+  phone?: string;
 }

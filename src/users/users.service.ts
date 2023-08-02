@@ -1,22 +1,41 @@
 import { Injectable } from '@nestjs/common';
 import { UsersRepository } from './users.repository';
-import { CreateUserDTO } from 'src/dto/users.dto';
+import { CreateUserDTO, UpdateUserDTO } from 'src/dto/users.dto';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
   constructor(private usersRepository: UsersRepository) {}
 
-  getUsers() {
-    return this.usersRepository.getUsers();
+  async getUsers() {
+    return await this.usersRepository.getUsers();
   }
 
-  createUser(user: CreateUserDTO) {
+  async createUser(user: CreateUserDTO) {
     const hashPassword = bcrypt.hashSync(user.password, 10);
     user = { 
       ...user, 
       password: hashPassword 
     };
-    return this.usersRepository.createUser(user);
+    return await this.usersRepository.createUser(user);
+  }
+
+  async getUserByEmail(email: string) {
+    return await this.usersRepository.getUserByEmail(email);
+  }
+
+  async updateUser(userId: number, updateUser: UpdateUserDTO) {
+    const user = await this.usersRepository.findUserById(userId);
+
+    if(!user) {
+      throw new Error('User not found');
+    } else if (updateUser.password) {
+     const hashPassword = bcrypt.hashSync(user.password, 10);
+      updateUser = { 
+        ...updateUser, 
+        password: hashPassword 
+      };
+    }
+    return await this.usersRepository.updateUser(user, updateUser);
   }
 }

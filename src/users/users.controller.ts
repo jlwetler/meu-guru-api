@@ -1,19 +1,29 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseIntPipe, Post, Put } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { CreateUserDTO } from 'src/dto/users.dto';
+import { CreateUserDTO, UpdateUserDTO } from 'src/dto/users.dto';
 
 @Controller('users')
 export class UsersController {
   
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private usersService: UsersService) {}
 
   @Get()
-  getUsers() {
-    return this.usersService.getUsers();
+  async getUsers() {
+    return await this.usersService.getUsers();
   }
 
   @Post()
-  createUser(@Body() body: CreateUserDTO) {
-    return this.usersService.createUser(body);
+  async createUser(@Body() body: CreateUserDTO) {
+    return await this.usersService.createUser(body);
+  }
+
+  @Get(':email')
+  async getUserByEmail(@Param('email') email: string) {
+    return await this.usersService.getUserByEmail(email);
+  }
+
+  @Put(':id')
+  async updateUser(@Param('id', ParseIntPipe) userId : number, @Body() updateUser: UpdateUserDTO){
+    return await this.usersService.updateUser(userId, updateUser)
   }
 }
