@@ -1,4 +1,5 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { PaginationDTO } from 'src/dto/pagination.dto';
 import { CreateUserDTO, UpdateUserDTO } from 'src/dto/users.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 
@@ -6,8 +7,21 @@ import { PrismaService } from 'src/prisma/prisma.service';
 export class UsersRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async getUsers() {
-    return await this.prisma.user.findMany();
+  async getUsers(pagination: PaginationDTO) {
+    if (pagination.page && pagination.pageSize) {
+      const page = parseInt(pagination.page);
+      const pageSize = parseInt(pagination.pageSize);
+      const skip = pageSize*(page - 1);
+      return await this.prisma.user.findMany({
+        skip,
+        take: pageSize,
+      }) 
+    }
+    return await this.prisma.user.findMany({
+      orderBy: {
+        name: 'asc'
+      }
+    });
   }
   
   async createUser(user: CreateUserDTO) {
@@ -32,12 +46,12 @@ export class UsersRepository {
     });
   }
 
-  async updateUser(user, updateUser: UpdateUserDTO) {
+  async updateUser(userId: number, updateUser: UpdateUserDTO) {
     return await this.prisma.user.update({
       where: {
-        id: user.id
+        id: userId
       }, data: {
-        ...user, ...updateUser
+       ...updateUser
       }
     })
   }
