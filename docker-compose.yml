@@ -1,0 +1,30 @@
+version: '3.9'
+
+services:
+  db:
+    image: postgres:latest
+    container_name: meu-guru-db
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: senha1234
+      POSTGRES_DB: guru_users
+    volumes:
+      - pgdata:/data/postgres
+
+  app:
+    build:
+      dockerfile: Dockerfile
+    container_name: meu-guru-app
+    restart: always
+    depends_on:
+      - db
+    ports:
+      - '4000:4000'
+    environment:
+      DATABASE_URL: postgres://postgres:senha1234@db:5432/guru_users
+
+volumes:
+  pgdata:
