@@ -28,10 +28,19 @@ export class UsersController {
     }
   }
 
-  @Get(':email')
+  @Get('/email/:email')
   async getUserByEmail(@Param('email') email: string) {
     try {
-      await this.usersService.getUserByEmail(email);
+      return await this.usersService.getUserByEmail(email);
+    } catch(error) {
+      throw new HttpException(error, error.status);
+    }
+  }
+
+  @Get('/name/:name')
+  async getUserByName(@Param('name') name: string) {
+    try {
+      return await this.usersService.getUserByName(name);
     } catch(error) {
       throw new HttpException(error, error.status);
     }

@@ -31,11 +31,27 @@ export class UsersRepository {
   }
 
   async getUserByEmail(email: string) {
-    return await this.prisma.user.findUnique({
+    return await this.prisma.user.findFirst({
       where: {
-        email
+        email: {
+          contains: email,
+          mode:'insensitive',
+        }
       }
     });
+  }
+
+  async getUserByName(name: string) {
+    const users =  await this.prisma.user.findMany({
+      where: {
+        name: {
+          startsWith: name, 
+          mode: 'insensitive'
+        }
+      }
+    });
+    console.log(users);
+    return users;
   }
 
   async findUserById(userId: number) {
