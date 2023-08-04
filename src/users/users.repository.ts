@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PaginationDTO } from 'src/dto/pagination.dto';
 import { CreateUserDTO, UpdateUserDTO } from 'src/dto/users.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -12,16 +12,20 @@ export class UsersRepository {
       const page = parseInt(pagination.page);
       const pageSize = parseInt(pagination.pageSize);
       const skip = pageSize*(page - 1);
-      return await this.prisma.user.findMany({
+      const users = await this.prisma.user.findMany({
         skip,
         take: pageSize,
       }) 
+      const totalUsers = await this.prisma.user.count();
+      return {users, totalUsers};
     }
-    return await this.prisma.user.findMany({
+    const users = await this.prisma.user.findMany({
       orderBy: {
         name: 'asc'
       }
     });
+    const totalUsers = await this.prisma.user.count();
+    return {users, totalUsers};
   }
   
   async createUser(user: CreateUserDTO) {
@@ -31,7 +35,7 @@ export class UsersRepository {
   }
 
   async getUserByEmail(email: string) {
-    return await this.prisma.user.findFirst({
+    return await this.prisma.user.findMany({
       where: {
         email: {
           contains: email,
@@ -42,7 +46,7 @@ export class UsersRepository {
   }
 
   async getUserByName(name: string) {
-    const users =  await this.prisma.user.findMany({
+    return await this.prisma.user.findMany({
       where: {
         name: {
           startsWith: name, 
@@ -50,8 +54,6 @@ export class UsersRepository {
         }
       }
     });
-    console.log(users);
-    return users;
   }
 
   async findUserById(userId: number) {
