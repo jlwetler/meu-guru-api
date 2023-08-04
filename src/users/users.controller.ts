@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Param, ParseIntPipe, Post, Put, Delete, BadRequestException, HttpException, Query } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { CreateUserDTO, UpdateUserDTO } from 'src/dto/users.dto';
-import { PaginationDTO } from 'src/dto/pagination.dto';
+import { CreateUserDTO, UpdateUserDTO } from '../dto/users.dto';
+import { PaginationDTO } from '../dto/pagination.dto';
 
 @Controller('users')
 export class UsersController {

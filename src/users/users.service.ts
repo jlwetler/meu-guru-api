@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { UsersRepository } from './users.repository';
-import { CreateUserDTO, UpdateUserDTO } from 'src/dto/users.dto';
+import { CreateUserDTO, UpdateUserDTO } from '../dto/users.dto';
 import * as bcrypt from 'bcrypt';
-import { PaginationDTO } from 'src/dto/pagination.dto';
+import { PaginationDTO } from '../dto/pagination.dto';
 
 @Injectable()
 export class UsersService {
